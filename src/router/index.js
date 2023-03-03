@@ -6,167 +6,188 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
-/**
- * Note: sub-menu only appear when route children.length >= 1
- * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
- *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
- * name:'router-name'             the name is used by <keep-alive> (must set!!!)
- * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
-  }
- */
 
 /**
  * constantRoutes
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [
-  {
+export const constantRoutes = [{
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
   {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
-
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/system-state',
     children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      path: '/system-state',
+      name: 'SystemState',
+      component: () => import('@/views/system-state/index'),
+      meta: {
+        title: '系统状态',
+        icon: 'systemState'
+      }
     }]
   },
-
   {
-    path: '/example',
+    path: '/current-job',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+    children: [{
+      path: 'index',
+      name: 'CurrentJob',
+      component: () => import('@/views/current-job/index'),
+      meta: {
+        title: '当前作业',
+        icon: 'form'
       }
-    ]
+    }]
   },
-
   {
-    path: '/form',
+    path: '/view-monitor',
+    component: Layout,
+    children: [{
+      path: 'index',
+      name: 'ViewMonitor',
+      component: () => import('@/views/view-monitor/index'),
+      meta: {
+        title: '查看监控',
+        icon: 'monitor'
+      }
+    }]
+  },
+  {
+    path: '/site-manage',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        name: 'SiteManage',
+        component: () => import('@/views/site-manage/index'),
+        meta: {
+          title: '站点管理',
+          icon: 'convertingStation'
+        }
       }
     ]
   },
-
   {
-    path: '/nested',
+    path: '/ot-manage',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
+    redirect: '/ot-manage/ot-release',
+    name: 'OtManage',
     meta: {
-      title: 'Nested',
-      icon: 'nested'
+      title: '操作票管理',
+      icon: 'documentation'
+    },
+    children: [{
+        path: 'ot-release',
+        component: () => import('@/views/ot-manage/ot-release/index'), // Parent router-view
+        name: 'OtRelease',
+        meta: {
+          title: '操作票发布'
+        },
+      },
+      {
+        path: 'job-account',
+        component: () => import('@/views/ot-manage/job-account/index'),
+        name: 'JobAccount',
+        meta: {
+          title: '作业记录'
+        }
+      },
+      {
+        path: 'ot-template',
+        component: () => import('@/views/ot-manage/ot-template/index'),
+        name: 'OtTemplate',
+        meta: {
+          title: '操作票模板'
+        }
+      },
+      {
+        path: 'op-template',
+        component: () => import('@/views/ot-manage/op-template/index'),
+        name: 'OpTemplate',
+        meta: {
+          title: '操作项目模板'
+        }
+      }
+    ]
+  },
+  {
+    path: '/user-manage',
+    component: Layout,
+    redirect: '/user-manage/user-list',
+    name: 'UserManage',
+    meta: {
+      title: '用户管理',
+      icon: 'user'
+    },
+    children: [{
+        path: 'user-list',
+        component: () => import('@/views/user-manage/user-list/index'), // Parent router-view
+        name: 'UserList',
+        meta: {
+          title: '用户列表'
+        },
+      },
+      {
+        path: 'user-recycle',
+        component: () => import('@/views/user-manage/user-recycle/index'),
+        name: 'UserRecycle',
+        meta: {
+          title: '用户回收站'
+        }
+      }
+    ]
+  },
+  {
+    path: '/system-manage',
+    component: Layout,
+    redirect: '/system-manage/user-manage',
+    name: 'SystemManage',
+    meta: {
+      title: '系统管理',
+      icon: 'system'
     },
     children: [
       {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        path: 'login-log',
+        component: () => import('@/views/system-manage/login-log/index'),
+        name: 'LoginLog',
+        meta: {
+          title: '登录日志'
+        }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'Menu2',
-        meta: { title: 'menu2' }
+        path: 'system-backup',
+        component: () => import('@/views/system-manage/system-backup/index'),
+        name: 'SystemBackup',
+        meta: {
+          title: '系统备份'
+        }
       }
     ]
   },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
-
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  }
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  mode: 'history', // require service support
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: constantRoutes
 })
 
